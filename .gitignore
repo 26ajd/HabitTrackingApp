@@ -9,7 +9,7 @@ db.sqlite3
 media/
 
 # Environment variables
-.env
+venv
 
 # VS Code settings
 .vscode/
