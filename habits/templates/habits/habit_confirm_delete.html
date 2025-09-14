@@ -1,0 +1,52 @@
+{% extends 'habits/base.html' %}
+
+{% block title %}حذف العادة - HabitMaster{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">حذف العادة</h1>
+    <a href="{% url 'habit_list' %}" class="btn btn-secondary">
+        <i class="fas fa-arrow-right me-2"></i>العودة للقائمة
+    </a>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card border-danger">
+            <div class="card-header bg-danger text-white">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-exclamation-triangle me-2"></i>تأكيد الحذف
+                </h5>
+            </div>
+            <div class="card-body">
+                <p>هل أنت متأكد من رغبتك في حذف العادة التالية؟</p>
+                
+                <div class="alert alert-light">
+                    <h6><strong>{{ habit.name }}</strong></h6>
+                    {% if habit.description %}
+                        <p class="mb-1">{{ habit.description }}</p>
+                    {% endif %}
+                    <small class="text-muted">
+                        التكرار: {{ habit.get_frequency_display }}
+                        {% if habit.goal %} | الهدف: {{ habit.goal }}{% endif %}
+                    </small>
+                </div>
+                
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <strong>تحذير:</strong> سيتم حذف جميع بيانات التتبع المرتبطة بهذه العادة نهائياً ولا يمكن استرجاعها.
+                </div>
+                
+                <form method="post" class="d-flex justify-content-between">
+                    {% csrf_token %}
+                    <a href="{% url 'habit_list' %}" class="btn btn-secondary">إلغاء</a>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash me-2"></i>حذف نهائياً
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

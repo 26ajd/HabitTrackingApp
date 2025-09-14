@@ -1,0 +1,126 @@
+{% extends 'habits/base.html' %}
+
+{% block title %}التقويم - HabitMaster{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">تقويم العادات</h1>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">آخر 30 يوم</h5>
+            </div>
+            <div class="card-body">
+                {% if calendar_data %}
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>التاريخ</th>
+                                    <th>العادات المكتملة</th>
+                                    <th>إجمالي العادات</th>
+                                    <th>النسبة</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for date, tracking_list in calendar_data.items %}
+                                    {% if tracking_list %}
+                                        <tr {% if date == today %}class="table-primary"{% endif %}>
+                                            <td>
+                                                <strong>{{ date|date:"Y/m/d" }}</strong>
+                                                {% if date == today %}
+                                                    <span class="badge bg-primary">اليوم</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% for tracking in tracking_list %}
+                                                    <span class="badge {% if tracking.completed %}bg-success{% else %}bg-secondary{% endif %} me-1">
+                                                        {{ tracking.habit.name }}
+                                                        {% if tracking.completed %}
+                                                            <i class="fas fa-check"></i>
+                                                        {% else %}
+                                                            <i class="fas fa-times"></i>
+                                                        {% endif %}
+                                                    </span>
+                                                {% endfor %}
+                                            </td>
+                                            <td>{{ tracking_list|length }}</td>
+                                            <td>
+                                                {% with completed_count=tracking_list|length total_count=tracking_list|length %}
+                                                    {% if total_count > 0 %}
+                                                        {% for tracking in tracking_list %}
+                                                            {% if tracking.completed %}
+                                                                {% if forloop.first %}
+                                                                    {% with completed_actual=0 %}
+                                                                        {% for t in tracking_list %}
+                                                                            {% if t.completed %}
+                                                                                {% with completed_actual=completed_actual|add:1 %}{% endwith %}
+                                                                            {% endif %}
+                                                                        {% endfor %}
+                                                                        <div class="progress" style="height: 20px;">
+                                                                            <div class="progress-bar bg-success" style="width: {% widthratio completed_actual total_count 100 %}%">
+                                                                                {% widthratio completed_actual total_count 100 %}%
+                                                                            </div>
+                                                                        </div>
+                                                                    {% endwith %}
+                                                                {% endif %}
+                                                            {% endif %}
+                                                        {% empty %}
+                                                            <div class="progress" style="height: 20px;">
+                                                                <div class="progress-bar bg-danger" style="width: 100%">0%</div>
+                                                            </div>
+                                                        {% endfor %}
+                                                    {% endif %}
+                                                {% endwith %}
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-calendar fa-3x text-muted mb-3"></i>
+                        <h4>لا توجد بيانات تتبع</h4>
+                        <p class="text-muted">ابدأ بتتبع عاداتك لرؤية التقويم</p>
+                        <a href="{% url 'habit_list' %}" class="btn btn-primary">
+                            <i class="fas fa-list me-2"></i>عرض العادات
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">مفتاح الألوان</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <span class="badge bg-success me-2">مكتملة</span>
+                        <small>العادة تم إنجازها</small>
+                    </div>
+                    <div class="col-md-3">
+                        <span class="badge bg-secondary me-2">غير مكتملة</span>
+                        <small>العادة لم يتم إنجازها</small>
+                    </div>
+                    <div class="col-md-3">
+                        <span class="badge bg-primary me-2">اليوم</span>
+                        <small>اليوم الحالي</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

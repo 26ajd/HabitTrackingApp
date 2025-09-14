@@ -1,0 +1,63 @@
+{% extends 'habits/base.html' %}
+
+{% block title %}عاداتي - HabitMaster{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">عاداتي</h1>
+    <a href="{% url 'habit_create' %}" class="btn btn-primary">
+        <i class="fas fa-plus me-2"></i>إضافة عادة جديدة
+    </a>
+</div>
+
+{% if habits %}
+    <div class="row">
+        {% for habit in habits %}
+            <div class="col-md-6 col-lg-4 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ habit.name }}</h5>
+                        {% if habit.description %}
+                            <p class="card-text">{{ habit.description|truncatewords:15 }}</p>
+                        {% endif %}
+                        <p class="card-text">
+                            <small class="text-muted">
+                                <i class="fas fa-clock me-1"></i>{{ habit.get_frequency_display }}
+                                {% if habit.goal %}
+                                    | <i class="fas fa-target me-1"></i>الهدف: {{ habit.goal }}
+                                {% endif %}
+                            </small>
+                        </p>
+                        <div class="d-flex justify-content-between">
+                            <div class="btn-group" role="group">
+                                <a href="{% url 'habit_edit' habit.pk %}" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="{% url 'habit_delete' habit.pk %}" class="btn btn-sm btn-outline-danger">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </div>
+                            <a href="{% url 'toggle_habit' habit.pk %}" class="btn btn-sm btn-success">
+                                <i class="fas fa-check me-1"></i>تم اليوم
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-footer text-muted">
+                        <small>أُنشئت في {{ habit.created_at|date:"Y/m/d" }}</small>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="text-center py-5">
+        <i class="fas fa-list-ul fa-3x text-muted mb-3"></i>
+        <h4>لا توجد عادات بعد</h4>
+        <p class="text-muted">ابدأ رحلتك في بناء العادات الإيجابية</p>
+        <a href="{% url 'habit_create' %}" class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i>إضافة عادة جديدة
+        </a>
+    </div>
+{% endif %}
+{% endblock %}
+

@@ -1,0 +1,63 @@
+{% extends 'habits/base.html' %}
+
+{% block title %}إنشاء حساب - HabitMaster{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header text-center">
+                <h3>إنشاء حساب جديد</h3>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-4 me-3">
+                        <label for="{{ form.username.id_for_label }}" class="form-label">اسم المستخدم</label>
+                        {{ form.username }}
+                        {% if form.username.help_text %}
+                            <div class="form-text">{{ form.username.help_text }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-4 me-4">
+                        <label for="{{ form.password1.id_for_label }}" class="form-label">كلمـة الـمـرور</label>
+                        {{ form.password1 }}
+                        {% if form.password1.help_text %}
+                            <div class="form-text">{{ form.password1.help_text }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.password2.id_for_label }}" class="form-label">تأكيد كلمة المرور</label>
+                        {{ form.password2 }}
+                    </div>
+                    
+                    {% if form.errors %}
+                        <div class="alert alert-danger">
+                            {{ form.errors }}
+                        </div>
+                    {% endif %}
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">إنشاء الحساب</button>
+                    </div>
+                </form>
+                
+                <div class="text-center mt-3">
+                    <p>لديك حساب بالفعل؟ <a href="{% url 'login' %}">تسجيل الدخول</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-control {
+        border-radius: 0.375rem;
+    }
+    .form-text {
+        font-size: 0.875em;
+        color: #6c757d;
+    }
+</style>
+{% endblock %}
+
